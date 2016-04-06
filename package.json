@@ -1,0 +1,21 @@
+{
+  "name": "mini",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jam0929/miniproject.git"
+  },
+  "author": "",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/jam0929/miniproject/issues"
+  },
+  "dependencies": {
+    "express": "~4.13.4"
+  }
+}
