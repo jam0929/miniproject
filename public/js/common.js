@@ -14,7 +14,10 @@ var showSignupForm = function() {
 };
 
 var clickBtnLogin = function() {
-  var param = {};
+  var param = {
+    username : $('#username').val(),
+    password : $('#password').val(),
+  };
 
   $.get("api/users", param, function(resp) {
     console.log(resp);

@@ -1,5 +1,3 @@
-'use strict';
-
 var express = require('express');
 var User = require('../models/users.js');
 
@@ -7,7 +5,27 @@ var router = express.Router();
 
 // GET users listing
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  console.log(req.query.username+ ", " + req.query.password);
+
+  User.findOne({
+    username : req.query.username,
+    password : req.query.password
+  }, function(err, user) {
+    if(err) {
+      res.status(500).json({
+        'response' : 500,
+        'message' : "Internal Server Error"
+      });
+    }
+
+    console.log(user);
+
+    res.status(200).json({
+      'response' : 200,
+      'message' : "Success",
+      'user' : user.toObj()
+    });
+  });
 });
 
 // SET user
@@ -19,11 +37,17 @@ router.post('/', function(req, res, next) {
 
   user.save(function(err, silence) {
     if(err) {
-      console.log(err);
-      throw err;
+      res.status(500).json({
+        'response' : 500,
+        'message' : "Internal Server Error"
+      });
     }
 
-    res.send(200, user);
+    res.status(200).json({
+      'response' : 200,
+      'message' : "Success",
+      'user' : user.toObj()
+    });
   });
 });
 

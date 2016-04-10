@@ -1,5 +1,3 @@
-'use strict';
-
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
@@ -16,6 +14,14 @@ var UserSchema = new Schema({
     required: true
   }
 });
+
+UserSchema.methods.toObj = function() {
+  var obj = {
+    'username' : this.username
+  };
+
+  return obj;
+};
 
 var User = mongoose.model('User', UserSchema);
 
