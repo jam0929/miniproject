@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var config = require('./config/config');
 var celery = require('node-celery');
+var jwt = require('jwt-simple');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -18,12 +19,6 @@ var socketServer
 });
 
 var io = require('socket.io').listen(socketServer);
-/*
-var client = celery.createClient({
-  CELERY_BROKER_URL: config.celeryBrokerUrl,
-  CELERY_RESULT_BACKEND: config.celeryResultBackend
-});
-*/
 
 // view engine setup
 app.set('view engine', 'ejs');
@@ -49,7 +44,14 @@ io.on('connection', function(socket){
   });
 
   socket.on('concat string', function(msg){
-    console.log('message: ' + msg);
+    var decoded = jwt.decode(msg.token, config.secret);
+
+    if(decoded.username !== msg.user.username) {
+      socket.emit('connect error', {
+        message: 'error'
+      });
+      return false;
+    }
 
     //celery
     var client = celery.createClient({

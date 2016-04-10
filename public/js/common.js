@@ -1,32 +1,49 @@
 var socket;
+var token;
+var user;
 
 $( document ).ready(function() {
   //event setting
   $('#btn_signup').on('click', function() {viewSection(2);});
   $('#submit_login').on('click', clickBtnLogin);
   $('#submit_signup').on('click', clickBtnSignup);
+  $('#submit_concat').on('click', clickBtnConcat);
 
   viewSection(1);
 });
 
 var action = function(resp) {
-  console.log(resp.user.username);
+  user = resp.user;
+  token = resp.token;
+  viewSection(3);
+
+  $('#user').html(resp.user.username);
 
   socket = io.connect('http://jam0929.martiz38.com:3001');
 
   socket.on('connect success', function(data) {
-    console.log("웹소켓이 성공적으로 연결되면 웹페이지에 concatString task라는 버튼과 두개의 문자열을 입력받을 수 있는 폼을 보여준다.");
-
-    socket.emit('concat string', {
-      str1 : "hello",
-      str2 : "world",
-      token : "token"
-    });
+    $('#form_concat').removeClass('hide');
   });
 
   socket.on('result string', function(data) {
-    console.log(data);
+    $("#concat").html(data.message);
+    $("#result").removeClass('hide');
   });
+
+  socket.on('connect error', function(data) {
+    alert("error");
+  });
+}
+
+var clickBtnConcat = function() {
+  var param = {
+    str1 : $('#str1').val(),
+    str2 : $('#str2').val(),
+    'token' : token,
+    'user' : user
+  };
+
+  socket.emit('concat string', param);
 }
 
 var clickBtnLogin = function() {
@@ -38,8 +55,8 @@ var clickBtnLogin = function() {
   $.get("api/users", param, function(resp) {
     action(resp);
   }).fail(function(resp) {
-    console.log($.parseJSON(resp));
-    alert($.parseJSON(resp).message);
+    data = JSON.parse(resp);
+    alert(data.message);
   });
 };
 
@@ -54,8 +71,8 @@ var clickBtnSignup = function() {
   $.post("api/users", param, function(resp) {
     action(resp);
   }).fail(function(resp) {
-    resp = $.parseJSON(resp);
-    alert($.parseJSON(resp).message);
+    data = JSON.parse(resp);
+    alert(data.message);
   });
 };
 

@@ -1,4 +1,5 @@
 var express = require('express');
+var session = require('express-session');
 var jwt = require('jwt-simple');
 var config = require('../config/config');
 var User = require('../models/users');
