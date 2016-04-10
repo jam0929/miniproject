@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var config = require('./config/config');
-//var celery = require('node-celery');
+var celery = require('node-celery');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -51,9 +51,26 @@ io.on('connection', function(socket){
   socket.on('concat string', function(msg){
     console.log('message: ' + msg);
 
-    var celery = require('./celery');
+    //celery
+    var client = celery.createClient({
+      CELERY_BROKER_URL: config.celeryBrokerUrl,
+      CELERY_RESULT_BACKEND: config.celeryResultBackend
+    });
 
-    celery.concatString(msg.str1, msg.str2);
+    //node-celery
+    client.on('error', function(err) {
+        console.log(err);
+    });
+
+    client.on('connect', function() {
+      var result = client.call('tasks.concatString', [msg.str1, msg.str2]);
+
+      result.on('ready', function(data) {
+        socket.emit('result string', {
+          message: data.result
+        });
+      });
+    });
   });
 
   socket.on('disconnect', function(){
@@ -91,6 +108,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;

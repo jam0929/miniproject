@@ -24,6 +24,10 @@ var action = function(resp) {
       token : "token"
     });
   });
+
+  socket.on('result string', function(data) {
+    console.log(data);
+  });
 }
 
 var showSignupForm = function() {

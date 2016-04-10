@@ -14,11 +14,12 @@ module.exports = {
     });
 
     client.on('connect', function() {
-        client.call('tasks.concatString', [str1, str2], function(result) {
-          console.log("hello world");
-          console.log(result);
-          client.end();
-        });
+      var result = client.call('tasks.concatString', [str1, str2]);
+
+      result.on('ready', function(data) {
+        console.log(data);
+        return data.result;
+      });
     });
   }
 };
