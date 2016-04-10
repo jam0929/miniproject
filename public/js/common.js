@@ -11,7 +11,7 @@ $( document ).ready(function() {
 });
 
 var action = function(resp) {
-  console.log(resp.username);
+  console.log(resp.user.username);
 
   socket = io.connect('http://jam0929.martiz38.com:3001');
 
