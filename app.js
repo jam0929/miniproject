@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var config = require('./config/config');
+var celery = require('node-celery');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -15,7 +16,13 @@ var socketServer
   = http.createServer(app).listen(config.socketPort, function(req,res) {
   console.log('Socket IO server has been started');
 });
+
 var io = require('socket.io').listen(socketServer);
+
+var client = celery.createClient({
+  CELERY_BROKER_URL: config.celeryBrokerUrl,
+  CELERY_RESULT_BACKEND: config.celeryResultBackend
+});
 
 // view engine setup
 app.set('view engine', 'ejs');
@@ -32,10 +39,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/api/users', users);
 
+//socket server
 io.on('connection', function(socket){
   console.log('a user connected');
 
-  socket.broadcast.emit('hi');
+  //node-celery
+  client.on('error', function(err) {
+      console.log(err);
+  });
+
+  client.on('connect', function() {
+      client.call('tasks.concatString', ['hello', 'world'], function(result) {
+          console.log(result);
+          client.end();
+      });
+  });
 
   socket.on('disconnect', function(){
       console.log('user disconnected');
