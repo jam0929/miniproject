@@ -43,6 +43,8 @@ var clickBtnLogin = function() {
 
   $.get("api/users", param, function(resp) {
     action(resp);
+  }).fail(function(resp) {
+    alert(resp.message);
   });
 };
 
@@ -56,5 +58,7 @@ var clickBtnSignup = function() {
 
   $.post("api/users", param, function(resp) {
     action(resp);
+  }).fail(function(resp) {
+    alert(resp.message);
   });
 };

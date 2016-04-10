@@ -8,14 +8,24 @@ var router = express.Router();
 // GET users listing
 router.get('/', function(req, res, next) {
   User.findOne({
-    username : req.query.username,
-    password : req.query.password
+    username : req.query.username
   }, function(err, user) {
     if(err) {
       res.status(500).json({
         'response' : 500,
         'message' : "Internal Server Error"
       });
+
+      return false;
+    }
+
+    if(!user.authenticate(req.query.password)) {
+      res.status(500).json({
+        'response' : 500,
+        'message' : "Invalid username or passowrd"
+      });
+
+      return false;
     }
 
     res.status(200).json({
@@ -40,6 +50,8 @@ router.post('/', function(req, res, next) {
         'response' : 500,
         'message' : "Internal Server Error"
       });
+
+      return false;
     }
 
     res.status(200).json({

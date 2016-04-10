@@ -1,0 +1,2 @@
+sudo rabbitmq-server &
+celery -A tasks worker --loglevel=info
