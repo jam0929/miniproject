@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
+var config = require('../config/config');
 var Schema = mongoose.Schema;
 
-mongoose.connect('mongodb://localhost/mini');
+mongoose.connect(config.db);
 
 var UserSchema = new Schema({
   username: {
@@ -15,10 +16,11 @@ var UserSchema = new Schema({
   }
 });
 
+// METHODS
 UserSchema.methods.toObj = function() {
-  var obj = {
-    'username' : this.username
-  };
+  var obj = this.toObject();
+
+  delete obj.password;
 
   return obj;
 };

@@ -1,12 +1,12 @@
 var express = require('express');
-var User = require('../models/users.js');
+var jwt = require('jwt-simple');
+var config = require('../config/config');
+var User = require('../models/users');
 
 var router = express.Router();
 
 // GET users listing
 router.get('/', function(req, res, next) {
-  console.log(req.query.username+ ", " + req.query.password);
-
   User.findOne({
     username : req.query.username,
     password : req.query.password
@@ -18,12 +18,11 @@ router.get('/', function(req, res, next) {
       });
     }
 
-    console.log(user);
-
     res.status(200).json({
       'response' : 200,
       'message' : "Success",
-      'user' : user.toObj()
+      'user' : user.toObj(),
+      'token' : jwt.encode(user.toObj(), config.secret)
     });
   });
 });
@@ -46,7 +45,8 @@ router.post('/', function(req, res, next) {
     res.status(200).json({
       'response' : 200,
       'message' : "Success",
-      'user' : user.toObj()
+      'user' : user.toObj(),
+      'token' : jwt.encode(user.toObj(), config.secret)
     });
   });
 });
