@@ -1,38 +1,51 @@
 <% include ./common/header %>
-    <div class="jumbotron">
-      <h1>Mini Project for Solidware</h1>
-    </div>
+    <section id="section1">
+      <div class="jumbotron">
+        <h1>Mini Project for Solidware</h1>
+      </div>
 
-    <div id="form_login">
-      <form>
-        <div class="form-group">
-          <label for="exampleInputEmail1">Username</label>
-          <input type="text" class="form-control" id="username" placeholder="Username">
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input type="password" class="form-control" id="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-          <div id="submit_login" class="btn btn-default">Log in</div>
-          <div id="btn_signup" class="btn btn-default">Sign up</div>
-        </div>
-      </form>
-    </div>
+      <div id="form_login">
+        <form>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Username</label>
+            <input type="text" class="form-control" id="username" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password">
+          </div>
+          <div class="form-group">
+            <div id="submit_login" class="btn btn-default">Log in</div>
+            <div id="btn_signup" class="btn btn-default">Sign up</div>
+          </div>
+        </form>
+      </div>
+    </section>
+    <section id="section2">
+      <div class="jumbotron">
+        <h1>Signup Page</h1>
+      </div>
 
-    <div id="form_signup" class="hide">
-      <form>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Username</label>
-          <input type="text" class="form-control" id="s_username" placeholder="Username">
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input type="password" class="form-control" id="s_password" placeholder="Password">
-        </div>
-        <div class="form-group">
-          <div id="submit_signup" class="btn btn-default">Sign up</div>
-        </div>
-      </form>
-    </div>
+      <div id="form_signup">
+        <form>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Username</label>
+            <input type="text" class="form-control" id="s_username" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="s_password" placeholder="Password">
+          </div>
+          <div class="form-group">
+            <div id="submit_signup" class="btn btn-default">Sign up</div>
+          </div>
+        </form>
+      </div>
+    </section>
+    <section id="section3">
+      <div class="jumbotron">
+        <h1>Hello, <strong id="user"></strong>.</h1>
+      </div>
+
+    </section>
 <% include ./common/footer %>

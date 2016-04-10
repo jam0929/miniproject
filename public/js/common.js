@@ -1,13 +1,12 @@
 var socket;
 
 $( document ).ready(function() {
-  //initial setting
-  //$('#form_signup').hide();
-
   //event setting
-  $('#btn_signup').on('click', showSignupForm);
+  $('#btn_signup').on('click', function() {viewSection(2);});
   $('#submit_login').on('click', clickBtnLogin);
   $('#submit_signup').on('click', clickBtnSignup);
+
+  viewSection(1);
 });
 
 var action = function(resp) {
@@ -30,11 +29,6 @@ var action = function(resp) {
   });
 }
 
-var showSignupForm = function() {
-  $('#form_signup').removeClass('hide');
-  $('#form_login').addClass('hide');
-};
-
 var clickBtnLogin = function() {
   var param = {
     username : $('#username').val(),
@@ -44,7 +38,8 @@ var clickBtnLogin = function() {
   $.get("api/users", param, function(resp) {
     action(resp);
   }).fail(function(resp) {
-    alert(resp.message);
+    console.log($.parseJSON(resp));
+    alert($.parseJSON(resp).message);
   });
 };
 
@@ -59,6 +54,12 @@ var clickBtnSignup = function() {
   $.post("api/users", param, function(resp) {
     action(resp);
   }).fail(function(resp) {
-    alert(resp.message);
+    resp = $.parseJSON(resp);
+    alert($.parseJSON(resp).message);
   });
+};
+
+var viewSection = function(section) {
+  $('section').addClass('hide');
+  $('#section'+section).removeClass('hide');
 };
