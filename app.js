@@ -4,11 +4,18 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var config = require('./config/config');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+var http = require('http');
+var socketServer
+  = http.createServer(app).listen(config.socketPort, function(req,res) {
+  console.log('Socket IO server has been started');
+});
+var io = require('socket.io').listen(socketServer);
 
 // view engine setup
 app.set('view engine', 'ejs');
@@ -24,6 +31,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/api/users', users);
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+
+  socket.broadcast.emit('hi');
+
+  socket.on('disconnect', function(){
+      console.log('user disconnected');
+  });
+
+  socket.on('chat message', function(msg){
+      console.log('message: ' + msg);
+      io.emit('chat message', msg);
+  });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

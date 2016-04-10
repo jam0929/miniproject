@@ -1,3 +1,5 @@
+var socket;
+
 $( document ).ready(function() {
   //initial setting
   //$('#form_signup').hide();
@@ -20,7 +22,7 @@ var clickBtnLogin = function() {
   };
 
   $.get("api/users", param, function(resp) {
-    console.log(resp);
+    socket = io.connect('http://jam0929.martiz38.com:3001');
   });
 };
 
@@ -33,6 +35,6 @@ var clickBtnSignup = function() {
   console.log(param);
 
   $.post("api/users", param, function(resp) {
-    console.log(resp);
+    socket = io.connect('http://jam0929.martiz38.com:3001');
   });
 };
