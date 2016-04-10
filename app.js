@@ -19,10 +19,12 @@ var socketServer
 
 var io = require('socket.io').listen(socketServer);
 
+/*
 var client = celery.createClient({
   CELERY_BROKER_URL: config.celeryBrokerUrl,
   CELERY_RESULT_BACKEND: config.celeryResultBackend
 });
+*/
 
 // view engine setup
 app.set('view engine', 'ejs');
@@ -43,25 +45,30 @@ app.use('/api/users', users);
 io.on('connection', function(socket){
   console.log('a user connected');
 
-  //node-celery
-  client.on('error', function(err) {
-      console.log(err);
+  socket.emit('connect success', {
+    message: 'success'
   });
 
-  client.on('connect', function() {
-      client.call('tasks.concatString', ['hello', 'world'], function(result) {
-          console.log(result);
-          client.end();
-      });
+  socket.on('concat string', function(msg){
+    console.log('message: ' + msg);
+
+    /*
+    //node-celery
+    client.on('error', function(err) {
+        console.log(err);
+    });
+
+    client.on('connect', function() {
+        client.call('tasks.concatString', ['hello', 'world'], function(result) {
+            console.log(result);
+            client.end();
+        });
+    });
+    */
   });
 
   socket.on('disconnect', function(){
       console.log('user disconnected');
-  });
-
-  socket.on('chat message', function(msg){
-      console.log('message: ' + msg);
-      io.emit('chat message', msg);
   });
 });
 

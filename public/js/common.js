@@ -10,6 +10,22 @@ $( document ).ready(function() {
   $('#submit_signup').on('click', clickBtnSignup);
 });
 
+var action = function(resp) {
+  console.log(resp.username);
+
+  socket = io.connect('http://jam0929.martiz38.com:3001');
+
+  socket.on('connect success', function(data) {
+    console.log("웹소켓이 성공적으로 연결되면 웹페이지에 concatString task라는 버튼과 두개의 문자열을 입력받을 수 있는 폼을 보여준다.");
+
+    socket.emit('concat string', {
+      str1 : "hello",
+      str2 : "world",
+      token : "token"
+    });
+  });
+}
+
 var showSignupForm = function() {
   $('#form_signup').removeClass('hide');
   $('#form_login').addClass('hide');
@@ -22,7 +38,7 @@ var clickBtnLogin = function() {
   };
 
   $.get("api/users", param, function(resp) {
-    socket = io.connect('http://jam0929.martiz38.com:3001');
+    action(resp);
   });
 };
 
@@ -35,6 +51,6 @@ var clickBtnSignup = function() {
   console.log(param);
 
   $.post("api/users", param, function(resp) {
-    socket = io.connect('http://jam0929.martiz38.com:3001');
+    action(resp);
   });
 };
