@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var config = require('./config/config');
 var celery = require('node-celery');
-var jwt = require('jwt-simple');
+var socketJwt = require('socketio-jwt');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -19,6 +19,11 @@ var socketServer
 });
 
 var io = require('socket.io').listen(socketServer);
+
+io.set('authorization', socketJwt.authorize({
+  secret: config.secret,
+  handshake: true
+}));
 
 // view engine setup
 app.set('view engine', 'ejs');
@@ -37,16 +42,14 @@ app.use('/api/users', users);
 
 //socket server
 io.on('connection', function(socket){
-  console.log('a user connected');
+  console.log(socket.client.request.decoded_token.username, 'connected');
 
   socket.emit('connect success', {
     message: 'success'
   });
 
   socket.on('concat string', function(msg){
-    var decoded = jwt.decode(msg.token, config.secret);
-
-    if(decoded.username !== msg.user.username) {
+    if(socket.client.request.decoded_token.username === undefined) {
       socket.emit('connect error', {
         message: 'error'
       });

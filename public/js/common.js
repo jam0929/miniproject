@@ -19,7 +19,8 @@ var action = function(resp) {
 
   $('#user').html(resp.user.username);
 
-  socket = io.connect('http://jam0929.martiz38.com:3001');
+  console.log(token);
+  socket = io.connect('http://jam0929.martiz38.com:3001', {query: 'token=' + token});
 
   socket.on('connect success', function(data) {
     $('#form_concat').removeClass('hide');

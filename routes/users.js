@@ -1,6 +1,5 @@
 var express = require('express');
-var session = require('express-session');
-var jwt = require('jwt-simple');
+var jwt = require('jsonwebtoken');
 var config = require('../config/config');
 var User = require('../models/users');
 
@@ -29,11 +28,13 @@ router.get('/', function(req, res, next) {
       return false;
     }
 
+    var token = jwt.sign(user.toObj(), config.secret, {expiresIn: 60*60*5});
+
     res.status(200).json({
       'response' : 200,
       'message' : "Success",
       'user' : user.toObj(),
-      'token' : jwt.encode(user.toObj(), config.secret)
+      'token' : token
     });
   });
 });
@@ -55,11 +56,13 @@ router.post('/', function(req, res, next) {
       return false;
     }
 
+    var token = jwt.sign(user.toObj(), config.secret, {expiresIn: 60*60*5});
+
     res.status(200).json({
       'response' : 200,
       'message' : "Success",
       'user' : user.toObj(),
-      'token' : jwt.encode(user.toObj(), config.secret)
+      'token' : token
     });
   });
 });
