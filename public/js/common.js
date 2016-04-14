@@ -53,7 +53,7 @@ var clickBtnLogin = function() {
     password : $('#password').val(),
   };
 
-  $.get("api/users", param, function(resp) {
+  $.post("login", param, function(resp) {
     action(resp);
   }).fail(function(resp) {
     data = JSON.parse(resp);
@@ -69,7 +69,7 @@ var clickBtnSignup = function() {
 
   console.log(param);
 
-  $.post("api/users", param, function(resp) {
+  $.post("signup", param, function(resp) {
     action(resp);
   }).fail(function(resp) {
     data = JSON.parse(resp);
